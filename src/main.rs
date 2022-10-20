@@ -1,9 +1,10 @@
+use chrono::NaiveDateTime;
 use reqwest::Client;
 use serde::Deserialize;
 use std::collections::HashMap;
 use std::env;
 use std::fs::File;
-use std::io::{BufRead, BufReader};
+use std::io::BufReader;
 
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
@@ -113,6 +114,11 @@ async fn add_todos(task: String, mut date: String, api: &Api) -> Result<()> {
     map.insert("text", task);
     map.insert("type", "todo".to_string());
     date.push_str("T00:00:00.000Z");
+    let date_fm = NaiveDateTime::parse_from_str(&date, "%Y-%m-%dT%H:%M:%S.000Z");
+    let _ = match date_fm {
+        Ok(_) => 1,
+        Err(err) => return Err(Box::new(err)),
+    };
     map.insert("date", date);
 
     let response = client
