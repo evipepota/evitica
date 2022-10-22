@@ -35,7 +35,7 @@ struct Api {
 
 fn key_check() -> Api {
     let mut path = dirs::home_dir().unwrap();
-    path.push("/.config/habitica/key.json");
+    path.push(".config/habitica/key.json");
     let f = File::open(path).unwrap();
     let reader = BufReader::new(f);
     let deserialized: Api = serde_json::from_reader(reader).unwrap();
