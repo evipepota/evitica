@@ -1,12 +1,10 @@
 use chrono::NaiveDateTime;
-use home_dir::*;
 use reqwest::Client;
 use serde::Deserialize;
 use std::collections::HashMap;
 use std::env;
 use std::fs::File;
 use std::io::BufReader;
-use std::path::Path;
 
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
@@ -36,9 +34,8 @@ struct Api {
 }
 
 fn key_check() -> Api {
-    let path = Path::new("~/.config/habitica/key.json")
-        .expand_home()
-        .unwrap();
+    let mut path = dirs::home_dir().unwrap();
+    path.push("/.config/habitica/key.json");
     let f = File::open(path).unwrap();
     let reader = BufReader::new(f);
     let deserialized: Api = serde_json::from_reader(reader).unwrap();
